@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 interface LeaderboardEntry {
   instagram: string;
@@ -10,9 +10,8 @@ interface LeaderboardEntry {
 }
 
 export default function Leaderboard() {
-  const [isOpen, setIsOpen] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const fetchLeaderboard = async () => {
@@ -36,6 +35,11 @@ export default function Leaderboard() {
     }
   };
 
+  // Tự động load khi component mount
+  useEffect(() => {
+    fetchLeaderboard();
+  }, []);
+
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -58,116 +62,90 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="mt-8">
-      {/* Toggle Button */}
-      <button
-        onClick={() => {
-          setIsOpen(!isOpen);
-          if (!isOpen && leaderboard.length === 0) {
-            fetchLeaderboard();
-          }
-        }}
-        className="w-full py-3 bg-white text-red-600 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
-      >
-        🏆 {isOpen ? 'Đóng' : 'Xem'} Bảng Xếp Hạng
-      </button>
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-bold text-gray-800">
+          Top lì xì 
+        </h3>
+        <button
+          onClick={fetchLeaderboard}
+          disabled={loading}
+          className="px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
+        >
+          {loading ? '⏳' : 'Reload'}
+        </button>
+      </div>
 
-      {/* Leaderboard Panel */}
-      <AnimatePresence>
-        {isOpen && (
+      {/* Divider */}
+      <div className="border-t-2 border-gray-200"></div>
+
+      {/* Loading */}
+      {loading && (
+        <div className="text-center py-6">
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-4 bg-white rounded-2xl shadow-2xl overflow-hidden"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="inline-block text-3xl"
           >
-            <div className="p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold text-gray-800">
-                  🏆 Top 10 May Mắn Nhất
-                </h3>
-                <button
-                  onClick={fetchLeaderboard}
-                  disabled={loading}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
-                >
-                  {loading ? '⏳' : '🔄'} Làm mới
-                </button>
-              </div>
+            🎰
+          </motion.div>
+          <p className="text-gray-600 mt-2 text-sm">Đang tải...</p>
+        </div>
+      )}
 
-              {/* Loading */}
-              {loading && (
-                <div className="text-center py-8">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="inline-block text-4xl"
-                  >
-                    🎰
-                  </motion.div>
-                  <p className="text-gray-600 mt-2">Đang tải...</p>
+      {/* Error */}
+      {error && !loading && (
+        <div className="text-center py-6">
+          <p className="text-red-500 text-sm">❌ {error}</p>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && !error && leaderboard.length === 0 && (
+        <div className="text-center py-6">
+          <p className="text-gray-500">Chưa có ai tham gia! 🎊</p>
+        </div>
+      )}
+
+      {/* Leaderboard List */}
+      {!loading && !error && leaderboard.length > 0 && (
+        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+          {leaderboard.map((entry, index) => (
+            <motion.div
+              key={entry.instagram}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`p-3 rounded-lg border-2 ${getRankStyle(index + 1)} transition-all hover:shadow-md`}
+            >
+              <div className="flex items-center justify-between">
+                {/* Rank & Instagram */}
+                <div className="flex items-center space-x-2">
+                  <span className="text-xl font-bold w-8 text-center">
+                    {getMedalEmoji(index + 1)}
+                  </span>
+                  <div>
+                    <p className="font-semibold text-gray-800 text-sm">
+                      @{entry.instagram}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {entry.date}
+                    </p>
+                  </div>
                 </div>
-              )}
 
-              {/* Error */}
-              {error && !loading && (
-                <div className="text-center py-8">
-                  <p className="text-red-500">❌ {error}</p>
-                </div>
-              )}
-
-              {/* Empty State */}
-              {!loading && !error && leaderboard.length === 0 && (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 text-lg">
-                    Chưa có ai tham gia! 🎊
+                {/* Amount */}
+                <div className="text-right">
+                  <p className="font-bold text-sm text-red-600">
+                    {formatMoney(entry.amount)}
                   </p>
                 </div>
-              )}
-
-              {/* Leaderboard List */}
-              {!loading && !error && leaderboard.length > 0 && (
-                <div className="space-y-3">
-                  {leaderboard.map((entry, index) => (
-                    <motion.div
-                      key={entry.instagram}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className={`p-4 rounded-xl border-2 ${getRankStyle(index + 1)} transition-all hover:shadow-md`}
-                    >
-                      <div className="flex items-center justify-between">
-                        {/* Rank & Instagram */}
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl font-bold w-10 text-center">
-                            {getMedalEmoji(index + 1)}
-                          </span>
-                          <div>
-                            <p className="font-semibold text-gray-800">
-                              @{entry.instagram}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {entry.date}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Amount */}
-                        <div className="text-right">
-                          <p className="font-bold text-lg text-red-600">
-                            {formatMoney(entry.amount)}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

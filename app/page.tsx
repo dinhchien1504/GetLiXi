@@ -80,9 +80,10 @@ export default function Home() {
           <h1 className="text-5xl font-bold text-yellow-300 mb-2 drop-shadow-lg">
             🧧 Lì Xì May Mắn 🧧
           </h1>
-          <p className="text-white text-lg">Chúc mừng năm mới 2025!</p>
+          <p className="text-white text-lg">Chúc mừng năm mới 2026! </p>
+          <p className="text-white text-sm">By divine.thrft </p>
         </div>
-
+        
         {/* Main Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-8 space-y-6">
           {!showResult ? (
@@ -106,7 +107,7 @@ export default function Home() {
                         handleSpin();
                       }
                     }}
-                    placeholder="@instagram_của_bạn"
+                    placeholder="Tên instagram của bạn ( Ví dụ: divine.thrft)"
                     disabled={isSpinning}
                     className="text-zinc-950 w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-red-500 transition-colors disabled:bg-gray-100"
                   />
@@ -165,6 +166,9 @@ export default function Home() {
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {/* Leaderboard - Hiển thị khi không đang quay */}
+              {!isSpinning && <Leaderboard />}
             </>
           ) : isDuplicate ? (
             /* Duplicate Instagram - Đã bốc rồi */
@@ -258,9 +262,6 @@ export default function Home() {
         <p className="text-center text-white mt-6 text-sm">
           Chúc bạn năm mới vui vẻ, hạnh phúc và nhiều may mắn! 🍀
         </p>
-
-        {/* Leaderboard */}
-        <Leaderboard />
       </div>
     </div>
   );
