@@ -4,9 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Cấu hình tỉ lệ và số tiền lì xì
 const LUCKY_CONFIG = [
-  { amount: 20000, weight: 30 },    // 30% cơ hội
+  { amount: 20000, weight: 15 },    // 30% cơ hội
+  { amount: 40000, weight: 15 },    // 30% cơ hội
   { amount: 50000, weight: 25 },   // 25% cơ hội
-  { amount: 100000, weight: 20 },   // 20% cơ hội
+  { amount: 100000, weight: 10 },   // 10% cơ hội
+  { amount: 150000, weight: 10 },   // 10% cơ hội
   { amount: 200000, weight: 15 },   // 15% cơ hội
   { amount: 300000, weight: 7 },   // 7% cơ hội
   { amount: 400000, weight: 2 },   // 2% cơ hội
@@ -123,3 +125,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
