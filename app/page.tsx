@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Leaderboard from './components/Leaderboard';
+import WheelSpinner from './components/WheelSpinner';
 
 export default function Home() {
   const [instagram, setInstagram] = useState('');
@@ -13,6 +14,7 @@ export default function Home() {
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [previousAmount, setPreviousAmount] = useState<number | null>(null);
 
+  // ...existing code...
   const handleSpin = async () => {
     if (!instagram.trim()) {
       setError('Vui lòng nhập tên Instagram của bạn!');
@@ -23,11 +25,9 @@ export default function Home() {
     setIsSpinning(true);
     setShowResult(false);
     setIsDuplicate(false);
+    setResult(null); // Reset result trước khi quay
 
-    // Simulate spinning animation
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    // Gửi request tới API - Server sẽ xử lý random và check duplicate
+    // Gọi API ngay lập tức (không đợi animation)
     try {
       const response = await fetch('/api/save-result', {
         method: 'POST',
@@ -41,21 +41,29 @@ export default function Home() {
 
       const data = await response.json();
 
-      setIsSpinning(false);
-      setShowResult(true);
-
       if (data.isDuplicate) {
         // Instagram đã bốc lì xì rồi
         setIsDuplicate(true);
         setPreviousAmount(data.previousAmount);
         setError(data.message);
+        
+        // Đợi 1s rồi chuyển màn hình
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setIsSpinning(false);
+        setShowResult(true);
       } else if (data.success) {
-        // Thành công - hiển thị kết quả
+        // Set result để wheel quay đến đúng vị trí
         setResult(data.amount);
         setIsDuplicate(false);
+        
+        // Đợi animation wheel hoàn tất (5s animation) + 2s để người dùng thấy rõ kết quả
+        await new Promise(resolve => setTimeout(resolve, 7000));
+        setIsSpinning(false);
+        setShowResult(true);
       } else {
         // Lỗi khác
         setError(data.error || 'Đã có lỗi xảy ra');
+        setIsSpinning(false);
         setShowResult(false);
       }
     } catch (err) {
@@ -140,32 +148,10 @@ export default function Home() {
                 )}
               </button>
 
-              {/* Spinning Animation */}
-              <AnimatePresence>
-                {isSpinning && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0 }}
-                    className="text-center py-8"
-                  >
-                    <motion.div
-                      animate={{ 
-                        y: [0, -20, 0],
-                        rotate: [0, 360]
-                      }}
-                      transition={{ 
-                        duration: 0.5, 
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                      className="text-8xl"
-                    >
-                      🧧
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Wheel Spinner - Luôn hiển thị */}
+              <div className="py-6">
+                <WheelSpinner result={result} isSpinning={isSpinning} />
+              </div>
 
               {/* Leaderboard - Hiển thị khi không đang quay */}
               {!isSpinning && <Leaderboard />}
