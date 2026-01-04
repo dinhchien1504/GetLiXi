@@ -111,7 +111,7 @@ export default function Leaderboard() {
       {/* Leaderboard List */}
       {!loading && !error && leaderboard.length > 0 && (
         <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
-          {leaderboard.map((entry, index) => (
+          {leaderboard.slice(0, 5).map((entry, index) => (
             <motion.div
               key={entry.instagram}
               initial={{ opacity: 0, x: -20 }}
