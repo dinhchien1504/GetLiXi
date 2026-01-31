@@ -112,8 +112,17 @@ export default function WheelSpinner({ result, isSpinning }: WheelSpinnerProps) 
 
   const getColor = (index: number) => {
     const colors = [
-      '#ef4444', '#eab308', '#22c55e', '#3b82f6', '#a855f7',
-      '#ec4899', '#f97316', '#06b6d4', '#6366f1', '#14b8a6', '#f43f5e'
+      '#166534', // green-800
+      '#15803d', // green-700
+      '#16a34a', // green-600
+      '#22c55e', // green-500
+      '#4ade80', // green-400
+      '#334155', // slate-700
+      '#475569', // slate-600
+      '#64748b', // slate-500
+      '#94a3b8', // slate-400
+      '#ea580c', // orange-600
+      '#fb923c', // orange-400
     ];
     return colors[index % colors.length];
   };
@@ -145,9 +154,11 @@ export default function WheelSpinner({ result, isSpinning }: WheelSpinnerProps) 
 
   return (
     <div className="relative w-80 h-80 mx-auto">
-      {/* Mũi tên chỉ vị trí */}
+      {/* Mũi tên chỉ vị trí - Safety Orange */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-20">
-        <div className="w-0 h-0 border-l-[20px] border-r-[20px] border-t-[30px] border-l-transparent border-r-transparent border-t-red-600 drop-shadow-lg"></div>
+        <div className="w-0 h-0 border-l-[20px] border-r-[20px] border-t-[30px] border-l-transparent border-r-transparent border-t-orange-500" style={{
+          filter: 'drop-shadow(0 4px 12px rgba(249, 115, 22, 0.8))'
+        }}></div>
       </div>
 
       {/* Vòng quay SVG */}
@@ -192,25 +203,30 @@ export default function WheelSpinner({ result, isSpinning }: WheelSpinnerProps) 
             </g>
           ))}
           
-          {/* Trung tâm vòng quay */}
+          {/* Trung tâm vòng quay - Equipment Hub */}
           <circle
             cx={centerX}
             cy={centerY}
             r="30"
-            fill="white"
-            stroke="#facc15"
-            strokeWidth="4"
+            fill="rgba(15, 23, 42, 0.95)"
+            stroke="#22c55e"
+            strokeWidth="3"
+            style={{ filter: 'drop-shadow(0 0 20px rgba(34, 197, 94, 0.6))' }}
           />
         </svg>
 
-        {/* Icon trung tâm */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl pointer-events-none">
-          🧧
+        {/* Icon trung tâm - Gear Symbol */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl pointer-events-none" style={{
+          filter: 'drop-shadow(0 2px 8px rgba(34, 197, 94, 0.8))'
+        }}>
+          ⚙️
         </div>
       </motion.div>
 
       {/* Viền ngoài */}
-      <div className="absolute inset-0 rounded-full border-8 border-yellow-400 shadow-2xl pointer-events-none"></div>
+      <div className="absolute inset-0 rounded-full border-8 border-purple-500 border-opacity-50 pointer-events-none" style={{
+        boxShadow: '0 0 40px rgba(168, 85, 247, 0.6), inset 0 0 30px rgba(168, 85, 247, 0.2)'
+      }}></div>
     </div>
   );
 }
