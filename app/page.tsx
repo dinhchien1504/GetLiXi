@@ -105,7 +105,7 @@ export default function Home() {
             className="mb-4"
           >
             <div className="inline-block px-4 py-1 bg-slate-900 bg-opacity-60 backdrop-blur-md border border-green-800 border-opacity-40 rounded-full mb-2">
-              <span className="text-green-500 text-xs font-bold tracking-widest uppercase">GIVEAWAY LAST YEAR</span>
+              <span className="text-green-500 text-xs font-bold tracking-widest uppercase">GET LIXI </span>
             </div>
           </motion.div>
           
@@ -141,7 +141,7 @@ export default function Home() {
           >
             <span className="inline-flex items-center gap-2 px-3 py-1 bg-orange-600 bg-opacity-20 border border-orange-600 border-opacity-30 rounded text-orange-400 text-xs font-bold uppercase tracking-wider">
               <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></span>
-              Discount 
+              LiXi 
             </span>
           </motion.div>
         </div>
@@ -242,7 +242,7 @@ export default function Home() {
                     Applying...
                   </span>
                 ) : (
-                  '▶ GetDiscount'
+                  'Get LiXi'
                 )}
               </motion.button>
 
@@ -272,7 +272,6 @@ export default function Home() {
               className="text-center space-y-6"
             >
               <div className="text-6xl mb-4">
-                �
               </div>
               <h2 className="text-xl font-black text-white uppercase tracking-wide">
                 @{instagram}
@@ -335,7 +334,7 @@ export default function Home() {
                 {/* Safety stripe accent */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500"></div>
                 
-                <p className="text-green-400 text-sm mb-2 font-black uppercase tracking-widest">Reward Discount</p>
+                <p className="text-green-400 text-sm mb-2 font-black uppercase tracking-widest">Reward LiXi</p>
                 <p className="text-5xl font-black text-white" style={{
                   textShadow: '0 2px 20px rgba(0, 0, 0, 0.5)'
                 }}>
@@ -352,7 +351,7 @@ export default function Home() {
                 }}
               >
                 <p className="text-green-400 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2">
-                  <span>✓</span> Discount Applied
+                  <span>✓</span> LiXi
                 </p>
               </motion.div>
 
